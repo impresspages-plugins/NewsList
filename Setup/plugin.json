@@ -1,0 +1,29 @@
+{
+    "title": "News list",
+    "version": "1.00",
+    "name": "NewsList",
+    "description": "Lists new page titles and first paragraphs.",
+    "author": "ImpressPages",
+    "options": [
+        {
+            "label": "Image width (px)",
+            "name": "imageWidth",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Menu URL paths (comma separated)",
+            "name": "menuList",
+            "type": "text",
+            "default": ""
+        },
+        {
+            "label": "Number of news to be displayed",
+            "name": "maxItems",
+            "type": "text",
+            "default": "3"
+        }
+
+
+    ]
+}
