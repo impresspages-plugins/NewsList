@@ -73,11 +73,15 @@ class Model
         foreach ($pages as $page) {
 
 
-            $item['imgUrl'] = ''; //TODOX
-            $item['altText'] = '';
             $item['linkUrl'] = $page->getLink();
-            $item['createdAt'] =  self::getDateFromStr($page->getCreatedAt());
+
+
+
             $item['heading'] = $page->getTitle();
+
+            $item['imgUrl'] = HelperPageContents::getPageImage($page);
+            $item['altText'] = $page->getTitle();
+
             $pageContent = HelperPageContents::getPageContent($page->getId());
 
             if (isset($pageContent['text'])){
@@ -86,12 +90,15 @@ class Model
                 $item['text'] = '';
             }
 
+            $item['createdAt'] =  self::getDateFromStr($page->getCreatedAt());
+
             $items[] = $item;
 
         }
 
         return $items;
     }
+
 
     private static function getLatestMenuPages($menuName, $numberOfPages)
     {

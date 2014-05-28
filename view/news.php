@@ -6,21 +6,13 @@ foreach ($items as $item){
 
         <?php
 
-        if (isset($item['imgUrl'])){
-
+        if (isset($item['imgUrl']) && $item['imgUrl']){
             ?>
-            <img src="<?php $item['imgUrl']; ?>"<?php
-
-                if (isset($imgWidth)){
-                    echo ' width="'.$imgWidth.'"';
-                }
-
-            ?> alt="<?php echo $item['altText']; ?>"><?php
-
+            <img src="<?php echo $item['imgUrl']; ?>" alt="<?php echo escAttr($item['altText']); ?>"><?php
         }
 
         ?>
-        <div class="_newsText">
+        <div class="_newsText" style="margin-left: <?php echo $imgWidth + 10; ?>px">
 
             <a href="<?php echo $item['linkUrl'];?>">
                 <h1><?php echo $item['heading']; ?></h1>
@@ -28,13 +20,14 @@ foreach ($items as $item){
             <div class="_date"><?php echo $item['createdAt']; ?></div>
 
             <div><?php echo $item['text']; ?></div>
+            <a class="_more" href="<?php
+            echo $item['linkUrl'];
+            ?>"><?php
+                echo __('Read more', 'NewsList');
+                ?></a>
         </div>
 
-        <a class="_more" href="<?php
-            echo $item['linkUrl'];
-        ?>"><?php
-            echo __('Read more', 'NewsList');
-        ?></a>
+
     </div>
 
 <?php

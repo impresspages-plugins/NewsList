@@ -8,7 +8,8 @@
 
 namespace Plugin\NewsList;
 
-class HelperPageContents{
+class HelperPageContents
+{
 
     public static function getPageContent($pageId)
     {
@@ -23,6 +24,61 @@ class HelperPageContents{
 
     }
 
+    public static function getPageImage($page)
+    {
+        $pageId = $page->getId();
+
+        $revisionId = self::getRevisionId($pageId);
+        $widgets = self::getWidgets($revisionId);
+
+        $imageUrl = false;
+
+        foreach ($widgets as $widget) {
+
+            if ($widget['type'] == 'Image') {
+                $imageUrl = self::scaleImage($widget['data']['imageOriginal']);
+                break;
+
+            } elseif ($widget['type'] == 'Gallery') {
+
+                if (isset($widget['data']['images'][0]['imageOriginal'])) {
+                    $imageUrl = self::scaleImage($widget['data']['images'][0]['imageOriginal']);
+                    break;
+                }
+            }
+
+
+        }
+
+        return $imageUrl;
+
+    }
+
+    private static function scaleImage($file)
+    {
+
+        if (ipGetOption('NewsList.imageWidth')){
+
+            $options = array(
+                'type' => 'fit',
+                'width' => ipGetOption('NewsList.imageWidth'),
+                'height' => 1000,
+                'forced' => false
+            );
+
+            $thumbnail = ipReflection($file, $options);
+
+            if (!$thumbnail) {
+                return false;
+            } else {
+                return ipFileUrl($thumbnail);
+            }
+
+        }else{
+            return ipFileUrl('file/repository/' . $file);
+        }
+
+    }
 
     private static function getRevisionId($pageId)
     {
@@ -45,12 +101,13 @@ class HelperPageContents{
 
     }
 
-    private static function hasLeadBreakWidget($allWidgets){
+    private static function hasLeadBreakWidget($allWidgets)
+    {
 
         $hasLeadBreak = false;
 
-        foreach ($allWidgets as $widget){
-            if ($widget['type']=='LeadBreak'){
+        foreach ($allWidgets as $widget) {
+            if ($widget['type'] == 'LeadBreak') {
                 $hasLeadBreak = true;
                 break;
             }
@@ -60,7 +117,8 @@ class HelperPageContents{
 
     }
 
-    private static function html2text($html){
+    private static function html2text($html)
+    {
 
         $html2text = new \Ip\Internal\Text\Html2Text($html, false);
         $text = esc($html2text->get_text());
@@ -69,24 +127,26 @@ class HelperPageContents{
         return $text;
     }
 
-    private static function getWidgetHeading($widget){
+    private static function getWidgetHeading($widget)
+    {
 
-        if (($widget['type']=='Heading') && isset($widget['data']['title'])){
+        if (($widget['type'] == 'Heading') && isset($widget['data']['title'])) {
             $title = $widget['data']['title'];
-        }else{
+        } else {
             $title = false;
         }
 
-        $title =  self::html2text($title);
+        $title = self::html2text($title);
 
         return $title;
     }
 
 
-    private static function getWidgetText($widget){
-        if (($widget['type']=='Text') && isset($widget['data']['text'])){
+    private static function getWidgetText($widget)
+    {
+        if (($widget['type'] == 'Text') && isset($widget['data']['text'])) {
             $text = $widget['data']['text'];
-        }else{
+        } else {
             $text = false;
         }
 
@@ -175,25 +235,25 @@ class HelperPageContents{
 
         $widgets = array();
 
-        if (self::hasLeadBreakWidget($allWidgets)){
+        if (self::hasLeadBreakWidget($allWidgets)) {
 
             $widgets = self::getContentBeforeLeadBreak($allWidgets);
 
-        }else{
+        } else {
 
-            foreach ($allWidgets as $widget){
+            foreach ($allWidgets as $widget) {
 
                 $widgetText = self::getWidgetHeading($widget);
-                if ($widgetText){
+                if ($widgetText) {
                     $widgets['heading'] = $widgetText;
                     break;
                 }
             }
 
-            foreach ($allWidgets as $widget){
+            foreach ($allWidgets as $widget) {
 
                 $widgetText = self::getWidgetText($widget);
-                if ($widgetText){
+                if ($widgetText) {
                     $widgets['text'] = $widgetText;
                     break;
                 }
@@ -208,21 +268,22 @@ class HelperPageContents{
      * @param $allWidgets
      * @return mixed|string
      */
-    private static function getContentBeforeLeadBreak($allWidgets){
+    private static function getContentBeforeLeadBreak($allWidgets)
+    {
 
         $text = '';
         $heading = false;
 
-        $cnt =0;
+        $cnt = 0;
 
-        foreach ($allWidgets as $widget){
+        foreach ($allWidgets as $widget) {
 
-            if (!$heading){
+            if (!$heading) {
                 $heading = self::getWidgetHeading($widget);
             }
 
             $text .= self::getWidgetText($widget);
-            if ($widget['type']=='LeadBreak'){
+            if ($widget['type'] == 'LeadBreak') {
                 break;
             }
             $cnt++;
