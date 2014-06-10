@@ -106,7 +106,7 @@ class Model
         $currLanguage = ipContent()->getCurrentLanguage()->getCode();
 
         $menu = ipDb()->selectRow('page', array('id', 'alias'), array('alias' => $menuName, 'parentId' => 0, 'languageCode' => $currLanguage));
-        $children = ipContent()->getChildren($menu['alias'], 0, $numberOfPages);
+        $children = ipContent()->getChildren($menu['id'], 0, $numberOfPages);
 
         return $children;
     }
