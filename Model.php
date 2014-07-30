@@ -16,6 +16,9 @@ class Model
         if ($imageWidth) {
             $data['imageWidth'] = $imageWidth;
         }
+        if ($maxItems == '') {
+            $maxItems = null;
+        }
 
         $menus = self::getMenuNames($menu); //support of menu names separated by comas
 
@@ -102,7 +105,12 @@ class Model
         $currLanguage = ipContent()->getCurrentLanguage()->getCode();
 
         $menu = ipDb()->selectRow('page', array('id', 'alias'), array('alias' => $menuName, 'parentId' => 0, 'languageCode' => $currLanguage));
-        $children = ipContent()->getChildren($menu['id'], 0, $numberOfPages);
+        if ($numberOfPages === null) {
+            $children = ipContent()->getChildren($menu['id']);
+        } else {
+            $children = ipContent()->getChildren($menu['id'], 0, $numberOfPages);
+        }
+
 
         return $children;
     }

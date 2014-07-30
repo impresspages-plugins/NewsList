@@ -93,7 +93,8 @@ class AdminController
             array(
                 'name' => 'imageWidth',
                 'label' => __('Image width', 'NewsList', false),
-                'value' => empty($widgetData['imageWidth']) ? null : $widgetData['imageWidth']
+                'value' => empty($widgetData['imageWidth']) ? 200 : $widgetData['imageWidth'],
+                'validators' => array('Required')
             )
         );
         $form->addField($field);
