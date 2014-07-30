@@ -10,20 +10,21 @@ namespace Plugin\NewsList;
 
 class Model
 {
-    public static function getNews()
+    public static function getNews($menu, $maxItems, $imageWidth)
     {
 
-        if (ipGetOption('NewsList.imageWidth')) {
-            $data['imgWidth'] = ipGetOption('NewsList.imageWidth');
+        if ($imageWidth) {
+            $data['imageWidth'] = $imageWidth;
         }
 
-        $menus = self::getMenuNames();
+        $menus = self::getMenuNames($menu); //support of menu names separated by comas
 
         $items = Array();
 
         foreach ($menus as $menu) {
-            $items = array_merge($items, self::getNewsItems($menu));
+            $items = array_merge($items, self::getNewsItems($menu, $maxItems, $imageWidth));
         }
+
 
         $data['items'] = $items;
 
@@ -31,10 +32,10 @@ class Model
 
     }
 
-    private static function getMenuNames()
+    private static function getMenuNames($menu)
     {
 
-        $cfgMenuString = ipGetOption('NewsList.menuList');
+        $cfgMenuString = $menu;
         if ($cfgMenuString){
 
             $cfgMenuString = str_replace(" ", "", $cfgMenuString);
@@ -55,17 +56,12 @@ class Model
         return $menus;
     }
 
-    private static function getDateFromStr($strTime){
 
-        $timestamp = strtotime($strTime);
-        return date('Y-m-d', $timestamp);
 
-    }
+    private static function getNewsItems($menu, $maxItems, $imageWidth)
+    {
 
-    private static function getNewsItems($menu)
-    { //TODOX
-
-        $pages = self::getLatestMenuPages($menu, ipGetOption('NewsList.maxItems'));
+        $pages = self::getLatestMenuPages($menu, $maxItems);
 
 
         $items = array();
@@ -79,7 +75,7 @@ class Model
 
             $item['heading'] = $page->getTitle();
 
-            $item['imgUrl'] = HelperPageContents::getPageImage($page);
+            $item['imgUrl'] = HelperPageContents::getPageImage($page, $imageWidth);
             $item['altText'] = $page->getTitle();
 
             $pageContent = HelperPageContents::getPageContent($page->getId());
@@ -90,7 +86,7 @@ class Model
                 $item['text'] = '';
             }
 
-            $item['createdAt'] =  self::getDateFromStr($page->getCreatedAt());
+            $item['createdAt'] = ipFormatDate($page->getCreatedAt(), 'NewsList');
 
             $items[] = $item;
 

@@ -24,7 +24,7 @@ class HelperPageContents
 
     }
 
-    public static function getPageImage($page)
+    public static function getPageImage($page, $imageWidth)
     {
         $pageId = $page->getId();
 
@@ -36,13 +36,13 @@ class HelperPageContents
         foreach ($widgets as $widget) {
 
             if ($widget['type'] == 'Image') {
-                $imageUrl = self::scaleImage($widget['data']['imageOriginal']);
+                $imageUrl = self::scaleImage($widget['data']['imageOriginal'], $imageWidth);
                 break;
 
             } elseif ($widget['type'] == 'Gallery') {
 
                 if (isset($widget['data']['images'][0]['imageOriginal'])) {
-                    $imageUrl = self::scaleImage($widget['data']['images'][0]['imageOriginal']);
+                    $imageUrl = self::scaleImage($widget['data']['images'][0]['imageOriginal'], $imageWidth);
                     break;
                 }
             }
@@ -54,14 +54,14 @@ class HelperPageContents
 
     }
 
-    private static function scaleImage($file)
+    private static function scaleImage($file, $imageWidth)
     {
 
-        if (ipGetOption('NewsList.imageWidth')){
+        if ($imageWidth){
 
             $options = array(
                 'type' => 'fit',
-                'width' => ipGetOption('NewsList.imageWidth'),
+                'width' => $imageWidth,
                 'height' => 1000,
                 'forced' => false
             );

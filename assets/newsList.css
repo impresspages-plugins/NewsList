@@ -1,10 +1,6 @@
-.ipNewsList{
-    clear: both;
-}
 
 .ipNewsList ._newsText{
     padding-bottom: 10px;
-    padding-left: 20px;
 }
 
 .ipNewsList h1{
@@ -18,10 +14,10 @@
 
 .ipNewsList ._newsItem img{
     float: left;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    margin-right: 10px;
 }
 
 .ipNewsList ._newsItem{
     padding-bottom: 20px;
+    clear: both;
 }
