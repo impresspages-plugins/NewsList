@@ -89,7 +89,7 @@ class Model
                 $item['text'] = '';
             }
 
-            $item['createdAt'] = ipFormatDate($page->getCreatedAt(), 'NewsList');
+            $item['createdAt'] = ipFormatDate(strtotime($page->getCreatedAt()), 'NewsList');
 
             $items[] = $item;
 
