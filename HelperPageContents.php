@@ -157,7 +157,7 @@ class HelperPageContents
      * Returns widget elements
      * @param $pageId
      */
-    private static function getWidgets($publishedRevisionId)
+    private static function getWidgets($publishedRevisionId, $block = 'main')
     {
 
         /** @var \Ip\Page $revisionId */
@@ -167,7 +167,7 @@ class HelperPageContents
                 'revisionId' => $publishedRevisionId,
                 'isVisible' => 1,
                 'isDeleted' => 0,
-                'blockName' => 'main'
+                'blockName' => $block
             ),
             'ORDER BY position ASC'
         );
@@ -176,11 +176,21 @@ class HelperPageContents
         if (!empty($widgetRecords)) {
 
             foreach ($widgetRecords as $widgetRecord) {
+                $widgetFiltered = self::getWidget($widgetRecord);
 
-                if ($widgetRecord['name'] != 'Columns') {
 
-                    $widgetFiltered = self::getWidget($widgetRecord);
 
+                if ($widgetRecord['name'] == 'Columns') {
+                    if (empty($widgetFiltered['data'])) {
+                        $widgetFiltered['data'] = array();
+                    }
+                    if (empty($widgetFiltered['data']['cols'])) {
+                        $widgetFiltered['data']['cols'] = array('column' . $widgetRecord['id'] . '_1', 'column' . $widgetRecord['id'] . '_2');
+                    }
+                    foreach($widgetFiltered['data']['cols'] as $col) {
+                        $widgetData = array_merge($widgetData, self::getWidgets($publishedRevisionId, $col));
+                    }
+                } else {
                     if ($widgetFiltered) {
                         $widgetData[] = $widgetFiltered;
                     }
