@@ -45,14 +45,15 @@ class HelperPageContents
             }
 
             if (!empty($image)) {
-                $imageUrl = self::scaleImage($widget['data']['imageOriginal'], $imageWidth);
+                $imageUrl = self::scaleImage($image, $imageWidth);
             }
-            return $imageUrl;
 
-
+            if ($imageUrl) {
+                return $imageUrl;
+            }
         }
 
-        return $imageUrl;
+        return false;
 
     }
 
