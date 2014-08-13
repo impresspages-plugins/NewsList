@@ -35,17 +35,19 @@ class HelperPageContents
 
         foreach ($widgets as $widget) {
 
-            if ($widget['type'] == 'Image') {
-                $imageUrl = self::scaleImage($widget['data']['imageOriginal'], $imageWidth);
-                break;
-
-            } elseif ($widget['type'] == 'Gallery') {
-
-                if (isset($widget['data']['images'][0]['imageOriginal'])) {
-                    $imageUrl = self::scaleImage($widget['data']['images'][0]['imageOriginal'], $imageWidth);
-                    break;
-                }
+            $image = false;
+            if (!empty($widget['data']['imageOriginal'])) {
+                $image = $widget['data']['imageOriginal'];
             }
+
+            if (empty($image) && !empty($widget['data']['images'][0]['imageOriginal'])) {
+                $image = $widget['data']['images'][0]['imageOriginal'];
+            }
+
+            if (!empty($image)) {
+                $imageUrl = self::scaleImage($widget['data']['imageOriginal'], $imageWidth);
+            }
+            return $imageUrl;
 
 
         }
@@ -144,13 +146,10 @@ class HelperPageContents
 
     private static function getWidgetText($widget)
     {
-        if (($widget['type'] == 'Text') && isset($widget['data']['text'])) {
-            $text = $widget['data']['text'];
-        } else {
-            $text = false;
+        if (!empty($widget['data']['text'])) {
+            return $widget['data']['text'];
         }
-
-        return $text;
+        return false;
     }
 
     /**
@@ -219,14 +218,6 @@ class HelperPageContents
 
             if (isset($widgetRecord['data'])) {
                 $widget['data'] = json_decode($widgetRecord['data'], true);
-                switch ($widget['type']) {
-                    case 'Image':
-//                        self::copyWidgetFile($widget['data']['imageOriginal']);
-                        break;
-                    case 'Gallery':
-//                        self::copyWidgetGalleryFiles($widget['data']);
-                        break;
-                }
             } else {
                 $widget = false;
             }
