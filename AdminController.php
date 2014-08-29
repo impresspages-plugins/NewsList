@@ -102,7 +102,7 @@ class AdminController
         $menus = \Ip\Internal\Pages\Service::getMenus(ipContent()->getCurrentLanguage()->getCode());
         $values = array();
         foreach ($menus as $menu) {
-            $values[] = array($menu['title'], $menu['alias']);
+            $values[] = array($menu['alias'], $menu['title']);
         }
 
         $field = new \Ip\Form\Field\Select(
