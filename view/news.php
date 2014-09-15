@@ -12,7 +12,7 @@ foreach ($items as $item){
         }
 
         ?>
-        <div class="_newsText" style="margin-left: <?php echo $imgWidth + 10; ?>px">
+        <div class="_newsText">
 
             <a href="<?php echo $item['linkUrl'];?>">
                 <h1><?php echo $item['heading']; ?></h1>
