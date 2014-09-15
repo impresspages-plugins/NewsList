@@ -123,7 +123,12 @@ class HelperPageContents
     private static function html2text($html)
     {
 
-        $text = Html2Text::convert($html);
+        try {
+            $text = Html2Text::convert($html);
+        } catch (Html2TextException $e) {
+            ipLog()->error('NewsList.htmlToText', array('html' => $html, 'exception' => $e->getMessage()));
+            $text = '';
+        }
         $text = str_replace("\n", '<br/>', $text);
 
         return $text;

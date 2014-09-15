@@ -47,6 +47,9 @@ class Html2Text
      */
     public static function convert($html)
     {
+        if (empty($html)) {
+            return '';
+        }
         $html = self::fix_newlines($html);
 
         $doc = new \DOMDocument();
