@@ -123,8 +123,7 @@ class HelperPageContents
     private static function html2text($html)
     {
 
-        $html2text = new \Ip\Internal\Text\Html2Text($html, false);
-        $text = esc($html2text->get_text());
+        $text = Html2Text::convert($html);
         $text = str_replace("\n", '<br/>', $text);
 
         return $text;
