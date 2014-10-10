@@ -84,7 +84,7 @@ class Model
             $pageContent = HelperPageContents::getPageContent($page->getId());
 
             if (isset($pageContent['text'])){
-                $item['text'] = $pageContent['text'];
+                $item['text'] = Html2Text::convert($pageContent['text']);
             }else{
                 $item['text'] = '';
             }
