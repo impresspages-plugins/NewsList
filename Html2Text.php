@@ -45,8 +45,11 @@ class Html2Text
      * @return string the HTML converted, as best as possible, to text
      * @throws Html2TextException if the HTML could not be loaded as a {@link \DOMDocument}
      */
-    public static function convert($html)
+       public static function convert($html, $partial = null)
     {
+        if ($partial || $partial === null && mb_strpos($html, '<html ') === false) {
+            $html = '<html lang="en"><head><meta charset="UTF-8" /></head><body>' . $html .'</body>';
+        }
         if (empty($html)) {
             return '';
         }
@@ -97,7 +100,7 @@ class Html2Text
         }
         $nextName = null;
         if ($nextNode instanceof DOMElement && $nextNode != null) {
-            $nextName = strtolower($nextNode->nodeName);
+            $nextName = mb_strtolower($nextNode->nodeName);
         }
 
         return $nextName;
@@ -113,7 +116,7 @@ class Html2Text
         }
         $nextName = null;
         if ($nextNode instanceof DOMElement && $nextNode != null) {
-            $nextName = strtolower($nextNode->nodeName);
+            $nextName = mb_strtolower($nextNode->nodeName);
         }
 
         return $nextName;
@@ -131,7 +134,7 @@ class Html2Text
         $nextName = self::next_child_name($node);
         $prevName = self::prev_child_name($node);
 
-        $name = strtolower($node->nodeName);
+        $name = mb_strtolower($node->nodeName);
 
         // start whitespace
         switch ($name) {
